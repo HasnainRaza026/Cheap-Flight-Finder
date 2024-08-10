@@ -6,6 +6,7 @@ from dotenv import find_dotenv, load_dotenv
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class FlightData:
     """
         Class to manage flight data from a Google Sheet via the Sheety API.
@@ -13,6 +14,7 @@ class FlightData:
         Methods:
             get_data(): Fetches data from the Google Sheet.
         """
+
     def __init__(self):
         # Load environment variables
         dotenv_path = find_dotenv()
@@ -33,7 +35,8 @@ class FlightData:
         try:
             response = requests.get(self.sheety_url, headers=sheety_headers)
             response.raise_for_status()
-            data = [(i["city"], i["iataCode"], i["lowestPrice"]) for i in response.json()["sheet1"]]
+            data = [(i["city"], i["iataCode"], i["lowestPrice"])
+                    for i in response.json()["sheet1"]]
             logger.info(f"Data fetched successfully: {data}")
             return data
         except requests.exceptions.HTTPError as http_err:

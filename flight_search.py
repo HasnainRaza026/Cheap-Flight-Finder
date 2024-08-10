@@ -10,6 +10,7 @@ import random
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class FlightSearch:
     """
         Class to search for flight deals using the Amadeus API.
@@ -20,6 +21,7 @@ class FlightSearch:
         Methods:
             search_for_deals(destinations): Searches for flight deals to the specified destinations.
         """
+
     def __init__(self, departure_city="KHI"):
         # Load environment variables
         dotenv_path = find_dotenv()
@@ -44,7 +46,8 @@ class FlightSearch:
             for destination in destinations:
                 cheapest_price = destination[2]
                 for month_offset in range(6):  # Next 6 months
-                    departure_date = (datetime.now() + timedelta(days=month_offset * 30)).strftime("%Y-%m-%d")
+                    departure_date = (
+                        datetime.now() + timedelta(days=month_offset * 30)).strftime("%Y-%m-%d")
                     response = self.amadeus.shopping.flight_offers_search.get(
                         originLocationCode=self.departure_city,
                         destinationLocationCode=destination[1],
@@ -55,8 +58,10 @@ class FlightSearch:
                     if flights:
                         flight_price = float(flights[0]["price"]["grandTotal"])
                         if flight_price <= cheapest_price:
-                            cheapest_flight.append((destination[0], destination[1], departure_date, flight_price))
-                    time.sleep(random.uniform(1, 3))  # Random sleep to avoid hitting API rate limits
+                            cheapest_flight.append(
+                                (destination[0], destination[1], departure_date, flight_price))
+                    # Random sleep to avoid hitting API rate limits
+                    time.sleep(random.uniform(1, 3))
             return cheapest_flight
         except ResponseError as error:
             logger.error(f"API request error: {error}")
